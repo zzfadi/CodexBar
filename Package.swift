@@ -16,6 +16,10 @@ let package = Package(
     platforms: [
         .macOS(.v14),
     ],
+    products: [
+        // Library for NotchFlow plugin integration
+        .library(name: "CodexBarNotchPlugin", targets: ["CodexBarNotchPlugin"]),
+    ],
     dependencies: [
         .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.8.1"),
         .package(url: "https://github.com/steipete/Commander", from: "0.2.1"),
@@ -69,6 +73,17 @@ let package = Package(
         ]
 
         #if os(macOS)
+        // NotchFlow plugin library - minimal dependencies for embedding
+        targets.append(.target(
+            name: "CodexBarNotchPlugin",
+            dependencies: [
+                "CodexBarCore",
+            ],
+            path: "Sources/CodexBarNotchPlugin",
+            swiftSettings: [
+                .enableUpcomingFeature("StrictConcurrency"),
+            ]))
+
         targets.append(contentsOf: [
             .executableTarget(
                 name: "CodexBarClaudeWatchdog",
